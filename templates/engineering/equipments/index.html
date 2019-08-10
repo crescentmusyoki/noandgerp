@@ -1,0 +1,197 @@
+{% extends 'engineering/project.html' %}
+
+{% load static %}
+
+{% block project_content %}
+
+
+    <!-- .card -->
+    <div class="card card-fluid">
+
+        <div class="card-header d-flex">
+
+            <h5>Equipments</h5>
+
+            <button id="client-expenses-tab" type="button" class="btn btn-primary ml-auto" data-toggle="modal"
+                    data-target="#newEquipment">Add equipment
+            </button>
+
+            <!-- Modal Drawer Right -->
+            <div class="modal modal-drawer fade" id="newEquipment" tabindex="-1" role="dialog"
+                 aria-labelledby="newEquipmentLabel" aria-hidden="true">
+                <!-- .modal-dialog -->
+                <form action="{% url 'project_equipments' project.slug %}" method="post"
+                      class="modal-dialog modal-drawer-right"
+                      role="document">
+                    {% csrf_token %}
+                    <!-- .modal-content -->
+                    <div class="modal-content">
+                        <!-- .modal-header -->
+                        <div class="modal-header">
+                            <h5 id="newEquipmentLabel" class="modal-title"> Add a new equipment </h5>
+                        </div><!-- /.modal-header -->
+                        <!-- .modal-body -->
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                                {{ form.name }}
+                                <span>{{ form.name.errors }}</span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.unit_cost.id_for_label }}">{{ form.unit_cost.label }}</label>
+                                        {{ form.unit_cost }}
+                                        <span>{{ form.unit_cost.errors }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.unit_cost_in.id_for_label }}">{{ form.unit_cost_in.label }}</label>
+                                        {{ form.unit_cost_in }}
+                                        <span>{{ form.unit_cost_in.errors }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="{{ form.length.id_for_label }}">{{ form.length.label }}</label>
+                                        {{ form.length }}
+                                        <span>{{ form.length.errors }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="{{ form.width.id_for_label }}">{{ form.width.label }}</label>
+                                        {{ form.width }}
+                                        <span>{{ form.width.errors }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="{{ form.height.id_for_label }}">{{ form.height.label }}</label>
+                                        {{ form.height }}
+                                        <span>{{ form.height.errors }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.measurement_in.id_for_label }}">{{ form.measurement_in.label }}</label>
+                                {{ form.measurement_in }}
+                                <span>{{ form.measurement_in.errors }}</span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.weight.id_for_label }}">{{ form.weight.label }}</label>
+                                        {{ form.weight }}
+                                        <span>{{ form.weight.errors }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="{{ form.weight_in.id_for_label }}">{{ form.weight_in.label }}</label>
+                                        {{ form.weight_in }}
+                                        <span>{{ form.weight_in.errors }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.estimated_quantity.id_for_label }}">{{ form.estimated_quantity.label }}</label>
+                                {{ form.estimated_quantity }}
+                                <span>{{ form.estimated_quantity.errors }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                                {{ form.description }}
+                                <span>{{ form.description.errors }}</span>
+                            </div>
+                        </div><!-- /.modal-body -->
+                        <!-- .modal-footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div><!-- /.modal-footer -->
+                    </div><!-- /.modal-content -->
+                </form><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <!-- /Modal Drawer Right -->
+
+        </div>
+
+        <!-- .card-body -->
+        <div class="card-body">
+
+            {% if project_equipments %}
+                <!-- .table-responsive -->
+                <div class="table-responsive">
+                    <!-- .table -->
+                    <table class="table">
+                        <!-- thead -->
+                        <thead>
+                        <tr>
+                            <th style="min-width:320px">Name</th>
+                            <th>Length</th>
+                            <th>Width</th>
+                            <th>Height</th>
+                            <th>Weight</th>
+                            <th style="width:100px; min-width:100px;"> &nbsp;</th>
+                        </tr>
+                        </thead><!-- /thead -->
+                        <!-- tbody -->
+                        <tbody>
+
+                        {% for project_equipment in project_equipments %}
+                            <!-- tr -->
+                            <tr>
+                                <td>
+                                    <a href="{% url 'project_equipment_edit' project.slug project_equipment.slug %}" class="tile tile-img mr-1">
+                                        <span class="img-fluid">{{ project_equipment.name|first|capfirst }}</span>
+                                    </a>
+                                    <a href="{% url 'project_equipment_edit' project.slug project_equipment.slug %}">{{ project_equipment.name }}</a>
+                                </td>
+                                <td class="align-middle">
+                                    {{ project_equipment.length }}{{ project_equipment.measurement_in }}</td>
+                                <td class="align-middle">
+                                    {{ project_equipment.width }}{{ project_equipment.measurement_in }}</td>
+                                <td class="align-middle">
+                                    {{ project_equipment.height }}{{ project_equipment.measurement_in }}</td>
+                                <td class="align-middle">
+                                    {{ project_equipment.weight }}{{ project_equipment.weight_in }}</td>
+                                <td class="align-middle text-right">
+                                    <a href="{% url 'project_equipment_edit' project.slug project_equipment.slug %}"
+                                       class="btn btn-sm btn-icon btn-secondary"><i
+                                            class="oi oi-eye"></i>
+                                        <span class="sr-only">View</span></a>
+
+                                    <a href="{% url 'project_equipment_delete' project.slug project_equipment.slug %}"
+                                       class="btn btn-sm btn-icon btn-danger"><i
+                                            class="far fa-trash-alt"></i> <span
+                                            class="sr-only">Remove</span></a>
+                                </td>
+                            </tr><!-- /tr -->
+                        {% endfor %}
+
+                        </tbody><!-- /tbody -->
+                    </table><!-- /.table -->
+                </div><!-- /.table-responsive -->
+            {% else %}
+                <!-- .empty-state -->
+                <div id="notfound-state" class="empty-state">
+                    <!-- .empty-state-container -->
+                    <div class="empty-state-container">
+                        <div class="state-figure">
+                            <img class="img-fluid" src="{% static 'assets/images/illustration/img-7.svg' %}" alt=""
+                                 style="max-width: 300px">
+                        </div>
+                        <h3 class="state-header"> No Equipments, Yet. </h3>
+                    </div><!-- /.empty-state-container -->
+                </div><!-- /.empty-state -->
+            {% endif %}
+
+        </div><!-- /.card-body -->
+
+    </div><!-- /.card -->
+
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+    <!-- form -->
+    <form class="auth-form" method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
+
+        {% get_providers as socialaccount_providers %}
+
+        {% if socialaccount_providers %}
+            <p>{% blocktrans with site.name as site_name %}Please sign in with one
+                of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
+                for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+
+            <div class="socialaccount_ballot">
+
+                <ul class="socialaccount_providers">
+                    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                </ul>
+
+                <div class="login-or">{% trans 'or' %}</div>
+
+            </div>
+
+            {% include "socialaccount/snippets/login_extra.html" %}
+
+        {% else %}
+            <p class="d-none">{% blocktrans %}
+                Don't have a account? <a href="{{ signup_url }}">Create account</a>{% endblocktrans %}</p>
+        {% endif %}
+
+        <!-- .form-group -->
+        <div class="form-group">
+            <div class="form-label-group">
+                <input type="text" name="login" id="id_login" class="form-control" placeholder="Username" required=""
+                       autofocus=""> <label for="id_login">Username</label>
+            </div>
+        </div><!-- /.form-group -->
+        <!-- .form-group -->
+        <div class="form-group">
+            <div class="form-label-group">
+                <input type="password" name="password" id="password" class="form-control" placeholder="Password"
+                       required="">
+                <label for="password">Password</label>
+            </div>
+        </div><!-- /.form-group -->
+        {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+        {% endif %}
+        <!-- .form-group -->
+        <div class="form-group">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
+        </div><!-- /.form-group -->
+        <!-- .form-group -->
+        <div class="form-group text-center">
+            <div class="custom-control custom-control-inline custom-checkbox">
+                <input type="checkbox" class="custom-control-input" name="remember" id="id_remember">
+                <label class="custom-control-label" for="id_remember">Remember me</label>
+            </div>
+        </div><!-- /.form-group -->
+
+        <!-- recovery links -->
+        <div class="text-center pt-3">
+            <a href="{% url 'account_reset_password' %}" class="link">Forgot Password?</a>
+        </div><!-- /recovery links -->
+    </form><!-- /.auth-form -->
+
+{% endblock %}

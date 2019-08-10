@@ -1,0 +1,121 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+
+    <!-- .page -->
+    <div class="page">
+        <!-- .page-navs -->
+        <header class="page-navs shadow-sm pr-3">
+            <!-- btn-account -->
+            <a href="{% url 'project_overview' project.slug %}" class="btn-account">
+                <div class="user-avatar mr-2">
+                    <img src="{% static 'assets/images/avatars/team4.jpg' %}" alt="">
+                </div>
+                <div class="account-summary">
+                    <h1 class="card-title"> Project </h1>
+                    <h6 class="card-subtitle text-muted"> Created on {{ project.created_at|date }} · Last
+                        update {{ project.updated_at|timesince }} </h6>
+                </div>
+            </a> <!-- /btn-account -->
+            <!-- right actions -->
+            <div class="ml-auto hidden">
+            </div><!-- /right actions -->
+        </header><!-- /.page-navs -->
+
+        <!-- .page-inner -->
+        <div class="page-inner">
+            <!-- .page-title-bar -->
+            <header class="page-title-bar">
+                <!-- grid row -->
+                <div class="row text-center text-sm-left">
+                    <!-- grid column -->
+                    <div class="col-sm-auto col-12 mb-2">
+                        <span class="tile tile-xl bg-pink">{{ project.name|first|capfirst }}{{ project.name|last|capfirst }}</span>
+                    </div><!-- /grid column -->
+                    <!-- grid column -->
+                    <div class="col">
+                        <h1 class="page-title"> {{ project.name|capfirst }} </h1>
+                        <p>{{ project.description|capfirst }}</p>
+
+                        <!-- Modal Drawer Right -->
+                        <div class="modal modal-drawer fade" id="editProject" tabindex="-1" role="dialog"
+                             aria-labelledby="editProjectLabel" aria-hidden="true">
+                            <!-- .modal-dialog -->
+                            <form action="{% url 'project_overview' project.slug %}" method="post"
+                                  class="modal-dialog modal-drawer-right" role="document">
+                                {% csrf_token %}
+                                <!-- .modal-content -->
+                                <div class="modal-content">
+                                    <!-- .modal-header -->
+                                    <div class="modal-header">
+                                        <h5 id="editProjectLabel" class="modal-title"> Edit project details </h5>
+                                    </div><!-- /.modal-header -->
+                                    <!-- .modal-body -->
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="{{ form.name.id_for_field }}">{{ form.name.label }}</label>
+                                            {{ form.name }}
+                                            <span>{{ form.name.errors }}</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ form.lead.id_for_field }}">{{ form.lead.label }}</label>
+                                            {{ form.lead }}
+                                            <span>{{ form.lead.errors }}</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ form.description.id_for_field }}">{{ form.description.label }}</label>
+                                            {{ form.description }}
+                                            <span>{{ form.description.errors }}</span>
+                                        </div>
+                                    </div><!-- /.modal-body -->
+                                    <!-- .modal-footer -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-warning" data-dismiss="modal">Close
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </div><!-- /.modal-footer -->
+                                </div><!-- /.modal-content -->
+                            </form><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                        <!-- /Modal Drawer Right -->
+                    </div><!-- /grid column -->
+                </div><!-- /grid row -->
+                <!-- .nav-scroller -->
+                <div class="nav-scroller border-bottom">
+                    <!-- .nav -->
+                    <div class="nav nav-tabs">
+                        <a class="nav-link d-none {% if '/overview/' in request.path %}active{% endif %}"
+                           href="{% url 'logistic_overview' project.slug %}">Overview</a>
+                        <a class="nav-link {% if '/bidding/' in request.path %}active{% endif %}"
+                           href="{% url 'logistic_bidding' project.slug %}">Biding</a>
+                        <a class="nav-link {% if '/quotation/' in request.path %}active{% endif %}"
+                           href="{% url 'logistic_quotation' project.slug %}">Quotation</a>
+                        <a class="nav-link {% if '/warehouse/' in request.path %}active{% endif %}"
+                           href="{% url 'logistic_warehouse' project.slug %}">Warehouse</a>
+                    </div><!-- /.nav -->
+                </div><!-- /.nav-scroller -->
+            </header><!-- /.page-title-bar -->
+            <!-- .page-section -->
+            <div class="page-section">
+
+                {% block project_content %}
+
+                {% endblock %}
+
+            </div><!-- /.page-section -->
+        </div><!-- /.page-inner -->
+
+    </div><!-- /.page -->
+
+{% endblock %}
+
+
+{% block js %}
+
+{% endblock %}

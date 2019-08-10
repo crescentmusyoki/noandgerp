@@ -1,0 +1,156 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+
+    <!-- .page -->
+    <div class="page">
+        <!-- .page-inner -->
+        <div class="page-inner">
+            <!-- .page-title-bar -->
+            <header class="page-title-bar">
+
+                <!-- title and toolbar -->
+                <div class="d-md-flex align-items-md-start">
+                    <h1 class="page-title mr-sm-auto"> Engineering </h1><!-- .btn-toolbar -->
+                    <div class="btn-toolbar">
+                        {% if perms.engineering.add_project %}
+                            <button type="button" class="btn btn-light" data-toggle="modal"
+                                    data-target="#newProject">
+                                <i class="oi oi-plus"></i>
+                                <span class="ml-1">New Project</span>
+                            </button>
+
+                            <!-- Modal Drawer Right -->
+                            <div class="modal fade" id="newProject" tabindex="-1" role="dialog"
+                                 aria-labelledby="newProjectLabel" aria-hidden="true">
+                                <!-- .modal-dialog -->
+                                <form action="{% url 'projects_directory' %}" method="post"
+                                      class="modal-dialog modal-drawer-right" role="document">
+                                    {% csrf_token %}
+                                    <!-- .modal-content -->
+                                    <div class="modal-content">
+                                        <!-- .modal-header -->
+                                        <div class="modal-header">
+                                            <h5 id="newProjectLabel" class="modal-title"> Create new project </h5>
+                                        </div><!-- /.modal-header -->
+                                        <!-- .modal-body -->
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="{{ form.name.id_for_field }}">{{ form.name.label }}</label>
+                                                {{ form.name }}
+                                                <span>{{ form.name.errors }}</span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="{{ form.lead.id_for_field }}">{{ form.lead.label }}</label>
+                                                {{ form.lead }}
+                                                <span>{{ form.lead.errors }}</span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="{{ form.description.id_for_field }}">{{ form.description.label }}</label>
+                                                {{ form.description }}
+                                                <span>{{ form.description.errors }}</span>
+                                            </div>
+                                        </div><!-- /.modal-body -->
+                                        <!-- .modal-footer -->
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-warning" data-dismiss="modal">Close
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div><!-- /.modal-footer -->
+                                    </div><!-- /.modal-content -->
+                                </form><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                            <!-- /Modal Drawer Right -->
+                        {% endif %}
+
+
+                        <button type="button" class="btn btn-light d-none">
+                            <i class="oi oi-data-transfer-upload"></i>
+                            <span class="ml-1">Import</span>
+                        </button>
+                    </div><!-- /.btn-toolbar -->
+                </div><!-- /title and toolbar -->
+            </header><!-- /.page-title-bar -->
+
+            <!-- .page-section -->
+            <div class="page-section">
+
+                <!-- .card -->
+                <div class="card card-fluid">
+
+                    <!-- .card-body -->
+                    <div class="card-body">
+
+                        <!-- .table-responsive -->
+                        <div class="table-responsive">
+                            <!-- .table -->
+                            <table class="table">
+                                <!-- thead -->
+                                <thead>
+                                <tr>
+                                    <th style="min-width:320px">Name</th>
+                                    <th> Lead</th>
+                                    <th> Created On</th>
+                                    <th style="width:100px; min-width:100px;"> &nbsp;</th>
+                                </tr>
+                                </thead><!-- /thead -->
+                                <!-- tbody -->
+                                <tbody>
+
+                                {% if projects %}
+                                    {% for project in projects %}
+                                        <!-- tr -->
+                                        <tr>
+                                            <td>
+                                                <a href="{% url 'project_overview' project.slug %}"
+                                                   class="tile tile-img mr-1">
+                                                    <span class="img-fluid">{{ project.name|first|capfirst }}</span>
+                                                </a>
+                                                <a href="{% url 'project_overview' project.slug %}">{{ project.name }}</a>
+                                            </td>
+                                            <td class="align-middle">{{ project.lead.first_name }} {{ project.lead.last_name }}</td>
+                                            <td class="align-middle">{{ project.created_at|date }}</td>
+                                            <td class="align-middle text-right">
+                                                {% if perms.engineering.change_project %}
+                                                    <a href="{% url 'project_overview' project.slug %}"
+                                                       class="btn btn-sm btn-icon btn-secondary"><i
+                                                            class="fa fa-pencil-alt"></i> <span
+                                                            class="sr-only">Edit</span></a>
+                                                {% endif %}
+                                                {% if perms.engineering.delete_project %}
+                                                    <a
+                                                            href="#" class="btn btn-sm btn-icon btn-danger"><i
+                                                            class="far fa-trash-alt"></i> <span
+                                                            class="sr-only">Remove</span></a>
+                                                {% endif %}
+                                            </td>
+                                        </tr><!-- /tr -->
+                                    {% endfor %}
+                                {% else %}
+
+                                {% endif %}
+
+                                </tbody><!-- /tbody -->
+                            </table><!-- /.table -->
+                        </div><!-- /.table-responsive -->
+
+                    </div><!-- /.card-body -->
+
+                </div><!-- /.card -->
+
+            </div><!-- /.page-section -->
+        </div><!-- /.page-inner -->
+    </div><!-- /.page -->
+
+{% endblock %}
+
+
+{% block js %}
+
+{% endblock %}

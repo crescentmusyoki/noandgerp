@@ -1,0 +1,163 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+
+    <!-- .page -->
+    <div class="page">
+        <!-- .page-inner -->
+        <div class="page-inner">
+            <!-- .page-title-bar -->
+            <header class="page-title-bar">
+
+                <!-- title and toolbar -->
+                <div class="d-md-flex align-items-md-start">
+                    <h1 class="page-title mr-sm-auto"> Compliance </h1><!-- .btn-toolbar -->
+                    <div class="btn-toolbar">
+                        <button type="button" class="btn btn-secondary" data-toggle="modal"
+                                data-target="#newProject">
+                            <i class="oi oi-plus"></i>
+                            <span class="ml-1">New survey</span>
+                        </button>
+
+                        <!-- Modal Drawer Right -->
+                        <div class="modal modal-drawer fade" id="newProject" tabindex="-1" role="dialog"
+                             aria-labelledby="newProjectLabel" aria-hidden="true">
+                            <!-- .modal-dialog -->
+                            <form action="{% url 'surveys_directory' %}" method="post"
+                                  class="modal-dialog modal-drawer-right" role="document">
+                                {% csrf_token %}
+                                <!-- .modal-content -->
+                                <div class="modal-content">
+                                    <!-- .modal-header -->
+                                    <div class="modal-header">
+                                        <h5 id="newDocumentLabel" class="modal-title"> Create a new compliance
+                                            survey </h5>
+                                    </div><!-- /.modal-header -->
+                                    <!-- .modal-body -->
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                                            {{ form.name }}
+                                            <span>{{ form.name.errors }}</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ form.survey_type.id_for_label }}">{{ form.survey_type.label }}</label>
+                                            {{ form.survey_type }}
+                                            <span>{{ form.survey_type.errors }}</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ form.project.id_for_label }}">{{ form.project.label }}</label>
+                                            {{ form.project }}
+                                            <span>{{ form.project.errors }}</span>
+                                        </div>
+                                    </div><!-- /.modal-body -->
+                                    <!-- .modal-footer -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-warning" data-dismiss="modal">Close
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </div><!-- /.modal-footer -->
+                                </div><!-- /.modal-content -->
+                            </form><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                        <!-- /Modal Drawer Right -->
+
+
+                        <button type="button" class="btn btn-light d-none">
+                            <i class="oi oi-data-transfer-upload"></i>
+                            <span class="ml-1">Import</span>
+                        </button>
+                    </div><!-- /.btn-toolbar -->
+                </div><!-- /title and toolbar -->
+            </header><!-- /.page-title-bar -->
+
+            <!-- .page-section -->
+            <div class="page-section">
+
+                <!-- .card -->
+                <div class="card card-fluid">
+
+                    <!-- .card-body -->
+                    <div class="card-body">
+
+                        {% if surveys %}
+                            <!-- .table-responsive -->
+                            <div class="table-responsive">
+                                <!-- .table -->
+                                <table class="table">
+                                    <!-- thead -->
+                                    <thead>
+                                    <tr>
+                                        <th style="min-width:320px">Name</th>
+                                        <th> Target Project</th>
+                                        <th> Survey Type</th>
+                                        <th> Created On</th>
+                                        <th style="width:100px; min-width:100px;"> &nbsp;</th>
+                                    </tr>
+                                    </thead><!-- /thead -->
+                                    <!-- tbody -->
+                                    <tbody>
+
+                                    {% for survey in surveys %}
+                                        <!-- tr -->
+                                        <tr>
+                                            <td>
+                                                <a href="{% url 'survey_overview' survey.slug %}" class="tile tile-img mr-1">
+                                                    <span class="img-fluid">{{ survey.name|first|capfirst }}</span>
+                                                </a>
+                                                <a href="{% url 'survey_overview' survey.slug %}">{{ survey.name }}</a>
+                                            </td>
+                                            <td class="align-middle">{{ survey.project.name }}</td>
+                                            <td class="align-middle">{{ survey.survey_type }}</td>
+                                            <td class="align-middle">{{ survey.created_at }}</td>
+                                            <td class="align-middle text-right">
+                                                <a href="{% url 'survey_overview' survey.slug %}" class="btn btn-sm btn-icon btn-secondary"><i
+                                                        class="oi oi-eye"></i>
+                                                    <span class="sr-only">View</span></a>
+
+                                                <a href="{% url 'survey_delete' survey.slug %}"
+                                                   class="btn btn-sm btn-icon btn-secondary"><i
+                                                        class="far fa-trash-alt"></i> <span
+                                                        class="sr-only">Remove</span></a>
+                                            </td>
+                                        </tr><!-- /tr -->
+                                    {% endfor %}
+
+                                    </tbody><!-- /tbody -->
+                                </table><!-- /.table -->
+                            </div><!-- /.table-responsive -->
+                        {% else %}
+                            <!-- .empty-state -->
+                            <div id="notfound-state" class="empty-state">
+                                <!-- .empty-state-container -->
+                                <div class="empty-state-container">
+                                    <div class="state-figure">
+                                        <img class="img-fluid" src="{% static 'assets/images/illustration/img-7.svg' %}"
+                                             alt=""
+                                             style="max-width: 300px">
+                                    </div>
+                                    <h3 class="state-header"> No Surveys, Yet. </h3>
+                                </div><!-- /.empty-state-container -->
+                            </div><!-- /.empty-state -->
+                        {% endif %}
+
+                    </div><!-- /.card-body -->
+
+                </div><!-- /.card -->
+
+            </div><!-- /.page-section -->
+        </div><!-- /.page-inner -->
+    </div><!-- /.page -->
+
+{% endblock %}
+
+
+{% block js %}
+
+{% endblock %}

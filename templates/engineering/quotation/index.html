@@ -1,0 +1,179 @@
+{% extends 'engineering/project.html' %}
+
+{% load static %}
+
+{% block project_content %}
+
+    <!-- .section-block -->
+    <div class="section-block">
+        <div class="alert alert-secondary has-icon">
+            <div class="alert-icon">
+                <i class="oi oi-info"></i>
+            </div>
+            {% if bid_placed %}
+                <p>You placed your bid on this project. {% if bid.quote_status == 'Accepted' %}
+                    Your bid was accepted. Please submit your quote below {% else %} Wait for your bid to be accepted
+                    before you can submit a qoute
+                {% endif %}.</p>
+            {% else %}
+                <p>You have not placed your bid on this project. You can do that on bids tab.</p>
+            {% endif %}
+        </div>
+    </div>
+    <!-- /.section-block -->
+
+    <!-- .card -->
+    <div class="card card-fluid">
+
+        <div class="card-header d-flex">
+
+            <h5>Quotation</h5>
+
+            <form class="ml-auto" method="post" action="{% url 'project_quotation' project.slug %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">
+                    Request for quotation
+                </button>
+            </form>
+
+        </div>
+
+        <!-- .card-body -->
+        <div class="card-body">
+
+            {% if project_equipments %}
+                <!-- .table-responsive -->
+                <div class="table-responsive">
+                    <!-- .table -->
+                    <table class="table">
+                        <!-- thead -->
+                        <thead>
+                        <tr>
+                            <th style="min-width:200px">Name</th>
+                            <th>Quantity</th>
+                            <th>Length</th>
+                            <th>Width</th>
+                            <th>Height</th>
+                            <th>Weight</th>
+                            <th>Status</th>
+                            <th style="width:200px; min-width:100px;"> &nbsp;</th>
+                        </tr>
+                        </thead><!-- /thead -->
+                        <!-- tbody -->
+                        <tbody>
+
+                        {% for project_equipment in project_equipments %}
+                            <!-- tr -->
+                            <tr>
+                                <td>
+                                    <a class="tile tile-img mr-1">
+                                        <span class="img-fluid">{{ project_equipment.equipment.name|first|capfirst }}</span>
+                                    </a>
+                                    <a>{{ project_equipment.equipment.name }}</a>
+                                </td>
+                                <td class="align-middle">
+                                    {{ project_equipment.equipment.estimated_quantity }}</td>
+                                <td class="align-middle">
+                                    {{ project_equipment.equipment.length }}{{ project_equipment.equipment.measurement_in }}</td>
+                                <td class="align-middle">
+                                    {{ project_equipment.equipment.width }}{{ project_equipment.equipment.measurement_in }}</td>
+                                <td class="align-middle">
+                                    {{ project_equipment.equipment.height }}{{ project_equipment.equipment.measurement_in }}</td>
+                                <td class="align-middle">
+                                    {{ project_equipment.equipment.weight }}{{ project_equipment.equipment.weight_in }}</td>
+                                <td class="align-middle">
+
+                                    <span class="badge badge-{% if project_equipment.quote_status == 'Open' %}warning{% elif project_equipment.quote_status == 'Accepted' %}success{% else %}danger{% endif %}">{{ project_equipment.quote_status }}</span>
+
+                                </td>
+                                <td class="align-middle text-right">
+                                    {% if project_equipment.quote_status != 'Accepted' or project_equipment.quote_status == 'Open' %}
+                                        <a href="{% url 'project_quotation_status' project.slug project_equipment.slug 'accept' %}"
+                                           class="btn btn-sm btn-icon btn-secondary"><i
+                                                class="oi oi-check"></i>
+                                            <span class="sr-only">Accept</span></a>
+                                    {% endif %}
+
+
+                                    {% if project_equipment.quote_status != 'Denied' or project_equipment.quote_status == 'Open' %}
+                                        <a href="{% url 'project_quotation_status' project.slug project_equipment.slug 'deny' %}"
+                                           class="btn btn-sm btn-icon btn-warning"><i
+                                                class="oi oi-x"></i>
+                                            <span class="sr-only">Deny</span></a>
+                                    {% endif %}
+
+                                    <a href="{% url 'project_quotation_status' project.slug project_equipment.slug 'delete' %}"
+                                       class="btn btn-sm btn-icon btn-danger"><i
+                                            class="far fa-trash-alt"></i> <span
+                                            class="sr-only">Remove</span></a>
+
+                                    <button type="button" class="btn btn-sm btn-secondary"
+                                            data-toggle="modal"
+                                            data-target="#newDocument"><i
+                                            class="oi oi-pencil"></i>
+                                        <span class="sr-only">Quote</span>
+                                    </button>
+
+                                    <!-- Modal Drawer Right -->
+                                    <div class="modal modal-drawer fade" id="newDocument" tabindex="-1" role="dialog"
+                                         aria-labelledby="newDocumentLabel" aria-hidden="true">
+                                        <!-- .modal-dialog -->
+                                        <form action="{% url 'project_quotation_edit' project.slug project_equipment.slug %}"
+                                              enctype="multipart/form-data" method="post"
+                                              class="modal-dialog modal-drawer-right" role="document">
+                                            {% csrf_token %}
+                                            <!-- .modal-content -->
+                                            <div class="modal-content">
+                                                <!-- .modal-header -->
+                                                <div class="modal-header">
+                                                    <h5 id="newDocumentLabel" class="modal-title">Quote price
+                                                        on {{ project_equipment.equipment.name }}</h5>
+                                                </div><!-- /.modal-header -->
+                                                <!-- .modal-body -->
+                                                <div class="modal-body">
+                                                    <div class="form-group text-left">
+                                                        <label for="id_price">Price</label>
+                                                        <input type="number" name="price" step="any"
+                                                               class="form-control" required="" id="id_price"
+                                                               value="{{ project_equipment.quote_price }}">
+                                                        <span class="help-block">NOTE: Price must be in {{ project_equipment.equipment.unit_cost_in }}</span>
+                                                    </div>
+                                                </div><!-- /.modal-body -->
+                                                <!-- .modal-footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-warning" data-dismiss="modal">
+                                                        Close
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary">Submit quote</button>
+                                                </div><!-- /.modal-footer -->
+                                            </div><!-- /.modal-content -->
+                                        </form><!-- /.modal-dialog -->
+                                    </div><!-- /.modal -->
+                                    <!-- /Modal Drawer Right -->
+                                </td>
+                            </tr><!-- /tr -->
+                        {% endfor %}
+
+                        </tbody><!-- /tbody -->
+                    </table><!-- /.table -->
+                </div><!-- /.table-responsive -->
+            {% else %}
+                <!-- .empty-state -->
+                <div id="notfound-state" class="empty-state">
+                    <!-- .empty-state-container -->
+                    <div class="empty-state-container">
+                        <div class="state-figure">
+                            <img class="img-fluid" src="{% static 'assets/images/illustration/img-7.svg' %}" alt=""
+                                 style="max-width: 300px">
+                        </div>
+                        <h3 class="state-header"> No Quotes, Yet. </h3>
+
+                    </div><!-- /.empty-state-container -->
+                </div><!-- /.empty-state -->
+            {% endif %}
+
+        </div><!-- /.card-body -->
+
+    </div><!-- /.card -->
+
+{% endblock %}

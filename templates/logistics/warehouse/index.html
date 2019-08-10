@@ -1,0 +1,105 @@
+{% extends 'logistics/project.html' %}
+
+{% load static %}
+
+{% block project_content %}
+
+    <!-- .section-block -->
+    <div class="section-block">
+        <div class="alert alert-secondary has-icon">
+            <div class="alert-icon">
+                <i class="oi oi-info"></i>
+            </div>
+            <p>Equipments cleared from shipping will be stored to this warehouse.</p>
+        </div>
+    </div>
+    <!-- /.section-block -->
+
+    <!-- .card -->
+    <div class="card card-fluid">
+
+        <div class="card-header d-flex">
+
+            <h5>Warehouse stock</h5>
+
+            <a class="btn btn-primary ml-auto" href="{% url 'logistic_bidding_status' project.slug %}">
+                Add stock
+            </a>
+
+        </div>
+
+        <!-- .card-body -->
+        <div class="card-body">
+
+            {% if project_stocks %}
+                <!-- .table-responsive -->
+                <div class="table-responsive">
+                    <!-- .table -->
+                    <table class="table">
+                        <!-- thead -->
+                        <thead>
+                        <tr>
+                            <th style="min-width:320px">Name</th>
+                            <th>Length</th>
+                            <th>Width</th>
+                            <th>Height</th>
+                            <th>Weight</th>
+                            <th style="width:100px; min-width:100px;"> &nbsp;</th>
+                        </tr>
+                        </thead><!-- /thead -->
+                        <!-- tbody -->
+                        <tbody>
+
+                        {% for project_equipment in project_stocks %}
+                            <!-- tr -->
+                            <tr>
+                                <td>
+                                    <a href="{% url 'project_equipment_edit' project.slug project_equipment.slug %}" class="tile tile-img mr-1">
+                                        <span class="img-fluid">{{ project_equipment.name|first|capfirst }}</span>
+                                    </a>
+                                    <a href="{% url 'project_equipment_edit' project.slug project_equipment.slug %}">{{ project_equipment.name }}</a>
+                                </td>
+                                <td class="align-middle">
+                                    {{ project_equipment.length }}{{ project_equipment.measurement_in }}</td>
+                                <td class="align-middle">
+                                    {{ project_equipment.width }}{{ project_equipment.measurement_in }}</td>
+                                <td class="align-middle">
+                                    {{ project_equipment.height }}{{ project_equipment.measurement_in }}</td>
+                                <td class="align-middle">
+                                    {{ project_equipment.weight }}{{ project_equipment.weight_in }}</td>
+                                <td class="align-middle text-right">
+                                    <a href="{% url 'project_equipment_edit' project.slug project_equipment.slug %}"
+                                       class="btn btn-sm btn-icon btn-secondary"><i
+                                            class="oi oi-eye"></i>
+                                        <span class="sr-only">View</span></a>
+
+                                    <a href="{% url 'project_equipment_delete' project.slug project_equipment.slug %}"
+                                       class="btn btn-sm btn-icon btn-danger"><i
+                                            class="far fa-trash-alt"></i> <span
+                                            class="sr-only">Remove</span></a>
+                                </td>
+                            </tr><!-- /tr -->
+                        {% endfor %}
+
+                        </tbody><!-- /tbody -->
+                    </table><!-- /.table -->
+                </div><!-- /.table-responsive -->
+            {% else %}
+                <!-- .empty-state -->
+                <div id="notfound-state" class="empty-state">
+                    <!-- .empty-state-container -->
+                    <div class="empty-state-container">
+                        <div class="state-figure">
+                            <img class="img-fluid" src="{% static 'assets/images/illustration/img-7.svg' %}" alt=""
+                                 style="max-width: 300px">
+                        </div>
+                        <h3 class="state-header"> No Stock, Yet. </h3>
+                    </div><!-- /.empty-state-container -->
+                </div><!-- /.empty-state -->
+            {% endif %}
+
+        </div><!-- /.card-body -->
+
+    </div><!-- /.card -->
+
+{% endblock %}

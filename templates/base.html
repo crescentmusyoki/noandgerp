@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block head_title %}{% endblock %}</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- End Required meta tags -->
+
+    <!-- FAVICONS -->
+    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'assets/apple-touch-icon.png' %}">
+    <link rel="shortcut icon" href="{% static 'assets/favicon.ico' %}">
+    <meta name="theme-color" content="#3063A0"><!-- End FAVICONS -->
+    <!-- GOOGLE FONT -->
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600" rel="stylesheet"><!-- End GOOGLE FONT -->
+    <!-- BEGIN PLUGINS STYLES -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/open-iconic/css/open-iconic-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/fontawesome/css/all.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/flatpickr/flatpickr.min.css' %}"><!-- END PLUGINS STYLES -->
+    <!-- BEGIN THEME STYLES -->
+    <link rel="stylesheet" href="{% static 'assets/stylesheets/theme.min.css' %}" data-skin="default">
+    <link rel="stylesheet" href="{% static 'assets/stylesheets/theme-dark.min.css' %}" data-skin="dark">
+    <link rel="stylesheet" href="{% static 'assets/stylesheets/custom.css' %}">
+    <!-- Disable unused skin immediately -->
+    <script>
+        var skin = localStorage.getItem('skin') || 'default';
+        var unusedLink = document.querySelector('link[data-skin]:not([data-skin="' + skin + '"])');
+        unusedLink.setAttribute('rel', '');
+        unusedLink.setAttribute('disabled', true);
+    </script><!-- END THEME STYLES -->
+    {% block extra_head %}
+    {% endblock %}
+</head>
+<body class="auth-body">
+{% block body %}
+
+    <!-- .auth -->
+    <main class="auth">
+        <header id="auth-header" class="auth-header">
+            <h1>
+                <img src="{% static 'assets/images/logo.jpg' %}" alt="" height="72"> <span class="sr-only">Sign In</span>
+            </h1>
+            {% if messages %}
+                <div class="alert alert-info">
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            {% if form.non_field_errors %}
+                <div class="alert alert-warning">
+                    {% for err in form.non_field_errors %}
+                        <p>{{ err }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </header>
+
+        {% block content %}
+        {% endblock %}
+        <!-- copyright -->
+        <footer class="auth-footer"> © 2019 All Rights Reserved.</footer>
+    </main><!-- /.auth -->
+
+{% endblock %}
+{% block extra_body %}
+{% endblock %}
+
+<!-- BEGIN BASE JS -->
+<script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'assets/vendor/bootstrap/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.min.js' %}"></script> <!-- END BASE JS -->
+<!-- BEGIN PLUGINS JS -->
+<script src="{% static 'assets/vendor/pace/pace.min.js' %}"></script>
+<script src="{% static 'assets/vendor/stacked-menu/stacked-menu.min.js' %}"></script>
+<script src="{% static 'assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
+<script src="{% static 'assets/vendor/flatpickr/flatpickr.min.js' %}"></script>
+<script src="{% static 'assets/vendor/easy-pie-chart/jquery.easypiechart.min.js' %}"></script>
+<script src="{% static 'assets/vendor/chart.js/Chart.min.js' %}"></script> <!-- END PLUGINS JS -->
+<!-- BEGIN THEME JS -->
+<script src="{% static 'assets/javascript/theme.min.js' %}"></script> <!-- END THEME JS -->
+<!-- BEGIN PAGE LEVEL JS -->
+<script src="{% static 'assets/javascript/pages/dashboard-demo.js' %}"></script> <!-- END PAGE LEVEL JS -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-116692175-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'UA-116692175-1');
+</script>
+</body>
+</html>

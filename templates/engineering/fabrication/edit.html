@@ -1,0 +1,161 @@
+{% extends 'engineering/project.html' %}
+
+{% load static %}
+{% load engineering_extras %}
+
+{% block project_content %}
+
+
+    <!-- .card -->
+    <div class="card card-fluid">
+
+        <div class="card-header d-flex">
+
+            <h5>Clear task</h5>
+
+            <div class="ml-auto">
+                <a href="{% url 'project_fabrication_status' project.slug project_task.slug 'canceled' %}"
+                   class="btn btn-warning m ml-1">Mark as Canceled</a>
+
+                {% if survey_complete %}
+                    <a href="{% url 'project_fabrication_status' project.slug project_task.slug 'complete' %}"
+                       class="btn btn-primary ml-1">Mark as Complete</a>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <!-- .card-body -->
+        <div class="card-body">
+
+            {% if survey %}
+                <div class="alert alert-info">
+                    This task has a compliance survey which you're required to complete before marking it as <strong>"Complete"</strong>
+                </div>
+
+                <p>Check and answer survey questions below:</p>
+                {% if survey_questions %}
+                    <!-- .table-responsive -->
+                    <div class="table-responsive">
+                        <!-- .table -->
+                        <table class="table">
+                            <!-- thead -->
+                            <thead>
+                            <tr>
+                                <th style="min-width:320px">Question</th>
+                                <th> Answer Type</th>
+                                <th> Status</th>
+                                <th style="width:50px; min-width:50px;"> &nbsp;</th>
+                            </tr>
+                            </thead><!-- /thead -->
+                            <!-- tbody -->
+                            <tbody>
+
+                            {% for survey_question in survey_questions %}
+                                <!-- tr -->
+                                <tr>
+                                    <td>
+                                        <a class="tile tile-img mr-1" data-toggle="modal"
+                                           data-target="#viewSingleDoc{{ survey_question.slug }}">
+                                            <span class="img-fluid">{{ survey_question.question|first|capfirst }}</span>
+                                        </a>
+                                        <a data-toggle="modal"
+                                           data-target="#viewSingleDoc{{ survey_question.slug }}">{{ survey_question.question }}</a>
+                                    </td>
+                                    <td class="align-middle">{{ survey_question.question_type|question_type }}</td>
+                                    <td class="align-middle">
+                                        {% if survey_question.id|question_answered:project_task.slug %}
+                                            <span class="badge badge-success">Answered</span>
+                                        {% else %}
+                                            <span class="badge badge-warning">Not Answered</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="align-middle text-right">
+
+                                        {% if survey_question.id|question_answered:project_task.slug %}
+                                            <button class="btn btn-sm btn-icon btn-secondary disabled" disabled><i
+                                                    class="oi oi-circle-x"></i>
+                                                <span class="sr-only">Can't Answer</span></button>
+                                        {% else %}
+                                            <button class="btn btn-sm btn-icon btn-secondary" data-toggle="modal"
+                                                    data-target="#viewSingleDoc{{ survey_question.slug }}"><i
+                                                    class="oi oi-pencil"></i>
+                                                <span class="sr-only">Answer</span></button>
+                                        {% endif %}
+
+                                        <!-- Modal Drawer Left -->
+                                        <div class="modal modal-drawer fade"
+                                             id="viewSingleDoc{{ survey_question.slug }}" tabindex="-1"
+                                             role="dialog" aria-labelledby="viewSingleDocLabel" aria-hidden="true">
+                                            <!-- .modal-dialog -->
+                                            <div class="modal-dialog modal-drawer-right modal-lg" role="document">
+                                                <!-- .modal-content -->
+                                                <form method="post"
+                                                      action="{% url 'project_fabrication_clear' project.slug project_task.slug %}"
+                                                      class="modal-content text-left">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="question"
+                                                           value="{{ survey_question.id }}">
+                                                    <!-- .modal-header -->
+                                                    <div class="modal-header">
+                                                        <h5 id="viewSingleDocLabel" class="modal-title">
+                                                            {{ survey_question.question }}</h5>
+                                                    </div><!-- /.modal-header -->
+                                                    <!-- .modal-body -->
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <label for="id_answer">Answer</label>
+                                                            {% if survey_question.question_type == '1' %}
+                                                                <select class="form-control" name="answer"
+                                                                        id="id_answer" required>
+                                                                    <option value="Yes">Yes</option>
+                                                                    <option value="No">No</option>
+                                                                </select>
+                                                            {% elif survey_question.question_type == '2' %}
+                                                                <input class="form-control" type="number" name="answer"
+                                                                       id="id_answer" required>
+                                                            {% else %}
+                                                                <textarea class="form-control" name="answer"
+                                                                          id="id_answer" required></textarea>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div><!-- /.modal-body -->
+                                                    <!-- .modal-footer -->
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-warning"
+                                                                data-dismiss="modal">
+                                                            Close
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                                    </div><!-- /.modal-footer -->
+                                                </form><!-- /.modal-content -->
+                                            </div><!-- /.modal-dialog -->
+                                        </div><!-- /.modal -->
+
+                                    </td>
+                                </tr><!-- /tr -->
+                            {% endfor %}
+
+                            </tbody><!-- /tbody -->
+                        </table><!-- /.table -->
+                    </div><!-- /.table-responsive -->
+                {% else %}
+                    <!-- .empty-state -->
+                    <div id="notfound-state" class="empty-state">
+                        <!-- .empty-state-container -->
+                        <div class="empty-state-container">
+                            <div class="state-figure">
+                                <img class="img-fluid" src="{% static 'assets/images/illustration/img-7.svg' %}" alt=""
+                                     style="max-width: 300px">
+                            </div>
+                            <h3 class="state-header"> No survey questions set. </h3>
+                        </div><!-- /.empty-state-container -->
+                    </div><!-- /.empty-state -->
+                {% endif %}
+            {% endif %}
+
+        </div><!-- /.card-body -->
+
+    </div><!-- /.card -->
+
+{% endblock %}

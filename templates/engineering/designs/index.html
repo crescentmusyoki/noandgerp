@@ -1,0 +1,164 @@
+{% extends 'engineering/project.html' %}
+
+{% load static %}
+
+{% block project_content %}
+
+
+    <!-- .card -->
+    <div class="card card-fluid">
+
+        <div class="card-header d-flex">
+
+            <h5>Engineering Designs</h5>
+
+            <button id="client-expenses-tab" type="button" class="btn btn-primary ml-auto" data-toggle="modal"
+                    data-target="#newDocument">Add design
+            </button>
+
+            <!-- Modal Drawer Right -->
+            <div class="modal modal-drawer fade" id="newDocument" tabindex="-1" role="dialog"
+                 aria-labelledby="newDocumentLabel" aria-hidden="true">
+                <!-- .modal-dialog -->
+                <form action="{% url 'project_designs' project.slug %}" enctype="multipart/form-data" method="post"
+                      class="modal-dialog modal-drawer-right" role="document">
+                    {% csrf_token %}
+                    <!-- .modal-content -->
+                    <div class="modal-content">
+                        <!-- .modal-header -->
+                        <div class="modal-header">
+                            <h5 id="newDocumentLabel" class="modal-title"> Upload new design </h5>
+                        </div><!-- /.modal-header -->
+                        <!-- .modal-body -->
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                                {{ form.name }}
+                                <span>{{ form.name.errors }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.design_type.id_for_label }}">{{ form.design_type.label }}</label>
+                                {{ form.design_type }}
+                                <span>{{ form.design_type.errors }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                                {{ form.description }}
+                                <span>{{ form.description.errors }}</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.document.id_for_label }}">{{ form.document.label }}</label>
+                                {{ form.document }}
+                                <span>{{ form.document.errors }}</span>
+                            </div>
+                        </div><!-- /.modal-body -->
+                        <!-- .modal-footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div><!-- /.modal-footer -->
+                    </div><!-- /.modal-content -->
+                </form><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <!-- /Modal Drawer Right -->
+
+        </div>
+
+        <!-- .card-body -->
+        <div class="card-body">
+
+            {% if project_designs %}
+                <!-- .table-responsive -->
+                <div class="table-responsive">
+                    <!-- .table -->
+                    <table class="table">
+                        <!-- thead -->
+                        <thead>
+                        <tr>
+                            <th style="min-width:320px">Name</th>
+                            <th> Uploaded On</th>
+                            <th style="width:100px; min-width:100px;"> &nbsp;</th>
+                        </tr>
+                        </thead><!-- /thead -->
+                        <!-- tbody -->
+                        <tbody>
+
+                        {% for project_design in project_designs %}
+                            <!-- tr -->
+                            <tr>
+                                <td>
+                                    <a href="#" class="tile tile-img mr-1" data-toggle="modal"
+                                            data-target="#viewSingleDoc{{ project_design.slug }}">
+                                        <span class="img-fluid">{{ project_design.name|first|capfirst }}</span>
+                                    </a>
+                                    <a href="#" data-toggle="modal"
+                                            data-target="#viewSingleDoc{{ project_design.slug }}">{{ project_design.name }}</a>
+                                </td>
+                                <td class="align-middle">{{ project_design.created_at }}</td>
+                                <td class="align-middle text-right">
+                                    <button class="btn btn-sm btn-icon btn-secondary" data-toggle="modal"
+                                            data-target="#viewSingleDoc{{ project_design.slug }}"><i
+                                            class="oi oi-eye"></i>
+                                        <span class="sr-only">View</span></button>
+
+                                    <!-- Modal Drawer Left -->
+                                    <div class="modal modal-drawer fade"
+                                         id="viewSingleDoc{{ project_design.slug }}" tabindex="-1"
+                                         role="dialog" aria-labelledby="viewSingleDocLabel" aria-hidden="true">
+                                        <!-- .modal-dialog -->
+                                        <div class="modal-dialog modal-drawer-right modal-lg" role="document">
+                                            <!-- .modal-content -->
+                                            <div class="modal-content">
+                                                <!-- .modal-header -->
+                                                <div class="modal-header">
+                                                    <h5 id="viewSingleDocLabel" class="modal-title">Preview
+                                                        "{{ project_design.name }}" document</h5>
+                                                </div><!-- /.modal-header -->
+                                                <!-- .modal-body -->
+                                                <div class="modal-body">
+                                                    <p class="text-left">{{ project_design.description }}</p>
+                                                    <div>
+                                                        <iframe width="465" height="600"
+                                                            src="https://docs.google.com/gview?url={{ project_design.document.url }}&embedded=true"></iframe>
+                                                    </div>
+                                                </div><!-- /.modal-body -->
+                                                <!-- .modal-footer -->
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-warning" data-dismiss="modal">
+                                                        Close
+                                                    </button>
+                                                </div><!-- /.modal-footer -->
+                                            </div><!-- /.modal-content -->
+                                        </div><!-- /.modal-dialog -->
+                                    </div><!-- /.modal -->
+
+                                    <a href="{% url 'project_design_delete' project.slug project_design.slug %}"
+                                       class="btn btn-sm btn-icon btn-secondary"><i
+                                            class="far fa-trash-alt"></i> <span
+                                            class="sr-only">Remove</span></a>
+                                </td>
+                            </tr><!-- /tr -->
+                        {% endfor %}
+
+                        </tbody><!-- /tbody -->
+                    </table><!-- /.table -->
+                </div><!-- /.table-responsive -->
+            {% else %}
+                <!-- .empty-state -->
+                <div id="notfound-state" class="empty-state">
+                    <!-- .empty-state-container -->
+                    <div class="empty-state-container">
+                        <div class="state-figure">
+                            <img class="img-fluid" src="{% static 'assets/images/illustration/img-7.svg' %}" alt=""
+                                 style="max-width: 300px">
+                        </div>
+                        <h3 class="state-header"> No Designs, Yet. </h3>
+                    </div><!-- /.empty-state-container -->
+                </div><!-- /.empty-state -->
+            {% endif %}
+
+        </div><!-- /.card-body -->
+
+    </div><!-- /.card -->
+
+{% endblock %}

@@ -1,0 +1,212 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+
+    <!-- .page -->
+    <div class="page">
+        <!-- .page-navs -->
+        <header class="page-navs shadow-sm pr-3">
+            <!-- btn-account -->
+            <a href="{% url 'project_overview' project.slug %}" class="btn-account">
+                <div class="user-avatar mr-2">
+                    <img src="{% static 'assets/images/avatars/team4.jpg' %}" alt="">
+                </div>
+                <div class="account-summary">
+                    <h1 class="card-title"> Project </h1>
+                    <h6 class="card-subtitle text-muted"> Created on {{ project.created_at|date }} · Last
+                        update {{ project.updated_at|timesince }} </h6>
+                </div>
+            </a> <!-- /btn-account -->
+            <!-- right actions -->
+            <div class="ml-auto">
+                {% if perms.engineering.change_project %}
+                    <!-- invite members -->
+                    <div class="dropdown d-inline-block">
+                        <button type="button" class="btn btn-light btn-icon" title="Invite members"
+                                data-toggle="dropdown"
+                                data-display="static" aria-haspopup="true" aria-expanded="false"><i
+                                class="fas fa-user-plus"></i></button>
+                        <div class="dropdown-arrow"></div><!-- .dropdown-menu -->
+                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-rich stop-propagation">
+                            <div class="dropdown-header"> Add members</div>
+                            <div class="form-group px-3 py-2 m-0">
+                                <input type="text" class="form-control" placeholder="e.g. @bent10" data-toggle="tribute"
+                                       data-remote="assets/data/tribute.json" data-menu-container="#people-list"
+                                       data-item-template="true" data-autofocus="true">
+                                <small class="form-text text-muted">Search people by username or email address to invite
+                                    them.
+                                </small>
+                            </div>
+                            <div id="people-list" class="tribute-inline stop-propagation"></div>
+                            <a href="" class="dropdown-footer">Add member to project</a>
+                        </div><!-- /.dropdown-menu -->
+                    </div><!-- /invite members -->
+                {% endif %}
+
+            </div><!-- /right actions -->
+        </header><!-- /.page-navs -->
+
+        <!-- .page-inner -->
+        <div class="page-inner">
+            <!-- .page-title-bar -->
+            <header class="page-title-bar">
+                <!-- grid row -->
+                <div class="row text-center text-sm-left">
+                    <!-- grid column -->
+                    <div class="col-sm-auto col-12 mb-2">
+                        <span class="tile tile-xl bg-pink">{{ project.name|first|capfirst }}{{ project.name|last|capfirst }}</span>
+                    </div><!-- /grid column -->
+                    <!-- grid column -->
+                    <div class="col">
+                        <h1 class="page-title"> {{ project.name|capfirst }} </h1>
+                        <p>{{ project.description|capfirst|slice:":180" }}...
+                            {% if perms.engineering.change_project %}<a href="#" data-toggle="modal"
+                                                                        data-target="#editProject"><span
+                                    class="ml-1">Edit Project</span> </a>{% endif %}</p>
+
+                        <!-- Modal Drawer Right -->
+                        <div class="modal modal-drawer fade" id="editProject" tabindex="-1" role="dialog"
+                             aria-labelledby="editProjectLabel" aria-hidden="true">
+                            <!-- .modal-dialog -->
+                            <form action="{% url 'project_overview' project.slug %}" method="post"
+                                  class="modal-dialog modal-drawer-right" role="document">
+                                {% csrf_token %}
+                                <!-- .modal-content -->
+                                <div class="modal-content">
+                                    <!-- .modal-header -->
+                                    <div class="modal-header">
+                                        <h5 id="editProjectLabel" class="modal-title"> Edit project details </h5>
+                                    </div><!-- /.modal-header -->
+                                    <!-- .modal-body -->
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="{{ form.name.id_for_field }}">{{ form.name.label }}</label>
+                                            {{ form.name }}
+                                            <span>{{ form.name.errors }}</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ form.lead.id_for_field }}">{{ form.lead.label }}</label>
+                                            {{ form.lead }}
+                                            <span>{{ form.lead.errors }}</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ form.description.id_for_field }}">{{ form.description.label }}</label>
+                                            {{ form.description }}
+                                            <span>{{ form.description.errors }}</span>
+                                        </div>
+                                    </div><!-- /.modal-body -->
+                                    <!-- .modal-footer -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-warning" data-dismiss="modal">Close
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </div><!-- /.modal-footer -->
+                                </div><!-- /.modal-content -->
+                            </form><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                        <!-- /Modal Drawer Right -->
+                    </div><!-- /grid column -->
+                </div><!-- /grid row -->
+                <!-- .nav-scroller -->
+                <div class="nav-scroller border-bottom">
+                    <!-- .nav -->
+                    <div class="nav nav-tabs">
+                        <a class="nav-link {% if '/overview/' in request.path %}active{% endif %}"
+                           href="{% url 'project_overview' project.slug %}">Overview</a>
+                        {% if perms.engineering.view_project_document %}
+                            <a class="nav-link {% if '/documents/' in request.path %}active{% endif %}"
+                               href="{% url 'project_documents' project.slug %}">Documents</a>
+                        {% endif %}
+
+                        {% if perms.engineering.view_project_design %}
+                        <a class="nav-link {% if '/designs/' in request.path %}active{% endif %}"
+                           href="{% url 'project_designs' project.slug %}">Designs</a>
+                    {% endif %}
+
+                    {% if perms.engineering.view_project_equipment %}
+                        <a class="nav-link {% if '/equipments/' in request.path %}active{% endif %}"
+                           href="{% url 'project_equipments' project.slug %}">Equipments</a>
+                    {% endif %}
+
+                    {% if perms.engineering.view_project_bid %}
+                        <a class="nav-link {% if '/bidding/' in request.path %}active{% endif %}"
+                           href="{% url 'project_bidding' project.slug %}">Biding</a>
+                    {% endif %}
+
+                    {% if perms.engineering.view_project_quote %}
+                        <a class="nav-link {% if '/quotation/' in request.path %}active{% endif %}"
+                           href="{% url 'project_quotation' project.slug %}">Quotation</a>
+                    {% endif %}
+
+                    {% if perms.engineering.view_project_fabrication %}
+                        <a class="nav-link {% if '/fabrication/' in request.path %}active{% endif %}"
+                           href="{% url 'project_fabrication' project.slug %}">Tasks</a>
+                    {% endif %}
+
+                    </div><!-- /.nav -->
+                </div><!-- /.nav-scroller -->
+            </header><!-- /.page-title-bar -->
+            <!-- .page-section -->
+            <div class="page-section">
+
+                {% block project_content %}
+
+                    <!-- .section-block -->
+                    <div class="section-block">
+                        <h2 class="section-title"> Project logs </h2><!-- .timeline -->
+                        <ul class="timeline">
+
+                            <!-- .timeline-item -->
+                            {% for history_record in history %}
+                                <li class="timeline-item">
+                                    <!-- .timeline-figure -->
+                                    <div class="timeline-figure">
+                                    <span class="tile tile-circle tile-sm"><i
+                                            class="far fa-calendar-alt fa-lg"></i></span>
+                                    </div><!-- /.timeline-figure -->
+                                    <!-- .timeline-body -->
+                                    <div class="timeline-body">
+                                        <!-- .media -->
+                                        <div class="media">
+                                            <!-- .media-body -->
+                                            <div class="media-body">
+                                                <h6 class="timeline-heading">
+                                                    <a href="#"
+                                                       class="text-link">{{ history_record.history_change_reason }}</a>
+                                                </h6>
+                                                <p class="mb-0">
+                                                    <a>{{ history_record.history_user|capfirst }}</a> {{ history_record.get_history_type_display }}
+                                                </p>
+                                                <p class="timeline-date d-sm-none">{{ history_record.history_date }}</p>
+                                            </div><!-- /.media-body -->
+                                            <!-- .media-right -->
+                                            <div class="d-none d-sm-block">
+                                                <span class="timeline-date">{{ history_record.history_date }}</span>
+                                            </div><!-- /.media-right -->
+                                        </div><!-- /.media -->
+                                    </div><!-- /.timeline-body -->
+                                </li><!-- /.timeline-item -->
+                            {% endfor %}
+
+                        </ul><!-- /.timeline -->
+                    </div><!-- /.section-block -->
+
+                {% endblock %}
+
+            </div><!-- /.page-section -->
+        </div><!-- /.page-inner -->
+
+    </div><!-- /.page -->
+
+{% endblock %}
+
+
+{% block js %}
+
+{% endblock %}

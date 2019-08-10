@@ -1,0 +1,131 @@
+{% extends 'engineering/project.html' %}
+
+{% load static %}
+
+{% block project_content %}
+
+    <!-- .section-block -->
+    <div class="section-block">
+        <div class="alert alert-secondary has-icon">
+            <div class="alert-icon">
+                <i class="oi oi-info"></i>
+            </div>
+            {% if project.bidding %}
+                <p> Bidding is enabled on this project. Vendors are able to submit their bids on this project currently.
+                    You can change this by clicking <strong>Disabling Bidding</strong> below.</p>
+            {% else %}
+                <p> Bidding is disabled on this project. Vendors are not able to submit their bids on this project
+                    currently. You can change this by clicking on <strong>Enable Bidding</strong> below.</p>
+            {% endif %}
+        </div>
+    </div>
+    <!-- /.section-block -->
+
+    <!-- .card -->
+    <div class="card card-fluid">
+
+        <div class="card-header d-flex">
+
+            <h5>Bids</h5>
+
+            <a class="btn btn-primary ml-auto" href="{% url 'project_bidding_status' project.slug %}">
+                {% if project.bidding %}
+                    Disable bidding
+                {% else %}
+                    Enable bidding
+                {% endif %}
+            </a>
+
+        </div>
+
+        <!-- .card-body -->
+        <div class="card-body">
+
+            {% if project_bids %}
+                <!-- .table-responsive -->
+                <div class="table-responsive">
+                    <!-- .table -->
+                    <table class="table">
+                        <!-- thead -->
+                        <thead>
+                        <tr>
+                            <th style="min-width:320px">Vendor</th>
+                            <th>Bid Status</th>
+                            <th>Submitted On</th>
+                            <th style="width:130px; min-width:100px;"> &nbsp;</th>
+                        </tr>
+                        </thead><!-- /thead -->
+                        <!-- tbody -->
+                        <tbody>
+
+                        {% for project_bid in project_bids %}
+                            <!-- tr -->
+                            <tr>
+                                <td>
+                                    <a href=""
+                                       class="tile tile-img mr-1">
+                                        <span class="img-fluid">{{ project_bid.vendor.first_name|first|capfirst }}{{ project_bid.vendor.last_name|first|capfirst }}</span>
+                                    </a>
+                                    <a href="">
+                                        {{ project_bid.vendor.first_name|capfirst }} {{ project_bid.vendor.last_name|capfirst }}</a>
+                                </td>
+                                <td class="align-middle">
+
+                                    <span class="badge badge-{% if project_bid.bid_status == 'Open' %}warning{% elif project_bid.bid_status == 'Accepted' %}success{% else %}danger{% endif %}">{{ project_bid.bid_status }}</span>
+
+                                </td>
+                                <td class="align-middle">
+                                    {{ project_bid.created_at|date }}</td>
+                                <td class="align-middle text-right">
+                                    {% if project_bid.bid_status != 'Accepted' or project_bid.bid_status == 'Open' %}
+                                        <a href="{% url 'project_bid_status' project.slug project_bid.slug 'accept' %}"
+                                           class="btn btn-sm btn-icon btn-secondary"><i
+                                                class="oi oi-check"></i>
+                                            <span class="sr-only">Accept</span></a>
+                                    {% endif %}
+
+
+                                    {% if project_bid.bid_status != 'Denied' or project_bid.bid_status == 'Open' %}
+                                        <a href="{% url 'project_bid_status' project.slug project_bid.slug 'deny' %}"
+                                           class="btn btn-sm btn-icon btn-warning"><i
+                                                class="oi oi-x"></i>
+                                            <span class="sr-only">Deny</span></a>
+                                    {% endif %}
+
+                                    <a href="{% url 'project_bid_status' project.slug project_bid.slug 'delete' %}"
+                                       class="btn btn-sm btn-icon btn-danger"><i
+                                            class="far fa-trash-alt"></i> <span
+                                            class="sr-only">Remove</span></a>
+                                </td>
+                            </tr><!-- /tr -->
+                        {% endfor %}
+
+                        </tbody><!-- /tbody -->
+                    </table><!-- /.table -->
+                </div><!-- /.table-responsive -->
+            {% else %}
+                <!-- .empty-state -->
+                <div id="notfound-state" class="empty-state">
+                    <!-- .empty-state-container -->
+                    <div class="empty-state-container">
+                        <div class="state-figure">
+                            <img class="img-fluid" src="{% static 'assets/images/illustration/img-7.svg' %}" alt=""
+                                 style="max-width: 300px">
+                        </div>
+                        <h3 class="state-header"> No Bids, Yet. </h3>
+
+                        <p>You can place your bid now by clicking on <strong>Place Bid</strong> button.</p>
+                        <form method="post" action="{% url 'project_bidding' project.slug %}">
+                            {% csrf_token %}
+                            <button class="btn btn-primary ml-auto" type="submit">Place Bid</button>
+                        </form>
+
+                    </div><!-- /.empty-state-container -->
+                </div><!-- /.empty-state -->
+            {% endif %}
+
+        </div><!-- /.card-body -->
+
+    </div><!-- /.card -->
+
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends 'engineering/project.html' %}
+
+{% load static %}
+
+{% block project_content %}
+
+
+    <!-- .card -->
+    <div class="card card-fluid">
+
+        <div class="card-header d-flex">
+
+            <h5>Edit Equipment</h5>
+
+            <a href="{% url 'project_equipment_delete' project.slug project_equipment.slug %}"
+               class="btn btn-danger ml-auto">Delete equipment</a>
+
+        </div>
+
+        <!-- .card-body -->
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-6">
+
+                    <!-- .modal-dialog -->
+                    <form action="{% url 'project_equipment_edit' project.slug project_equipment.slug %}" method="post">
+                        {% csrf_token %}
+                        <!-- .modal-content -->
+                        <div>
+
+                            <!-- .modal-body -->
+                            <div>
+                                <div class="form-group">
+                                    <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                                    {{ form.name }}
+                                    <span>{{ form.name.errors }}</span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="{{ form.unit_cost.id_for_label }}">{{ form.unit_cost.label }}</label>
+                                            {{ form.unit_cost }}
+                                            <span>{{ form.unit_cost.errors }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="{{ form.unit_cost_in.id_for_label }}">{{ form.unit_cost_in.label }}</label>
+                                            {{ form.unit_cost_in }}
+                                            <span>{{ form.unit_cost_in.errors }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="{{ form.length.id_for_label }}">{{ form.length.label }}</label>
+                                            {{ form.length }}
+                                            <span>{{ form.length.errors }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="{{ form.width.id_for_label }}">{{ form.width.label }}</label>
+                                            {{ form.width }}
+                                            <span>{{ form.width.errors }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="{{ form.height.id_for_label }}">{{ form.height.label }}</label>
+                                            {{ form.height }}
+                                            <span>{{ form.height.errors }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.measurement_in.id_for_label }}">{{ form.measurement_in.label }}</label>
+                                    {{ form.measurement_in }}
+                                    <span>{{ form.measurement_in.errors }}</span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="{{ form.weight.id_for_label }}">{{ form.weight.label }}</label>
+                                            {{ form.weight }}
+                                            <span>{{ form.weight.errors }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="{{ form.weight_in.id_for_label }}">{{ form.weight_in.label }}</label>
+                                            {{ form.weight_in }}
+                                            <span>{{ form.weight_in.errors }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.estimated_quantity.id_for_label }}">{{ form.estimated_quantity.label }}</label>
+                                    {{ form.estimated_quantity }}
+                                    <span>{{ form.estimated_quantity.errors }}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                                    {{ form.description }}
+                                    <span>{{ form.description.errors }}</span>
+                                </div>
+                            </div><!-- /.modal-body -->
+                            <!-- .modal-footer -->
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div><!-- /.modal-footer -->
+                        </div><!-- /.modal-content -->
+                    </form><!-- /.modal-dialog -->
+
+                </div>
+            </div>
+
+        </div><!-- /.card-body -->
+
+    </div><!-- /.card -->
+
+{% endblock %}

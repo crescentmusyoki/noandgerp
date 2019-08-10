@@ -1,0 +1,130 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+
+    <!-- .page -->
+    <div class="page">
+
+        <!-- .page-cover -->
+        <header class="page-cover">
+            <div class="text-center">
+                <a href="{% url 'my_profile' %}" class="user-avatar user-avatar-xl"><img
+                        src="{% static 'assets/images/avatars/profile.jpg' %}" alt=""></a>
+                <h2 class="h4 mt-2 mb-0"> {{ request.user.first_name }} {{ request.user.last_name }}</h2>
+
+                <p class="text-muted"> {{ request.user.email }} </p>
+                <p> Joined on {{ request.user.date_joined }} </p>
+            </div>
+        </header><!-- /.page-cover -->
+
+        <!-- .page-navs -->
+        <nav class="page-navs">
+            <!-- .nav-scroller -->
+            <div class="nav-scroller">
+                <!-- .nav -->
+                <div class="nav nav-center nav-tabs">
+                    <a class="nav-link" href="#activities">Activities</a>
+                    <a class="nav-link {% if request.get_full_path == "/profile/settings" %}active{% endif %}"
+                       href="{% url 'my_profile' %}">Settings</a>
+                </div><!-- /.nav -->
+            </div><!-- /.nav-scroller -->
+        </nav><!-- /.page-navs -->
+
+        <!-- .page-inner -->
+        <div class="page-inner">
+            <!-- .page-title-bar -->
+            <header class="page-title-bar">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active">
+                            <a><i class="breadcrumb-icon fa fa-info-circle mr-2"></i>Account</a>
+                        </li>
+                    </ol>
+                </nav>
+            </header><!-- /.page-title-bar -->
+            <!-- .page-section -->
+            <div class="page-section">
+                <!-- grid row -->
+                <div class="row">
+                    <!-- grid column -->
+                    <div class="col-lg-4">
+                        <!-- .card -->
+                        <div class="card card-fluid">
+                            <h6 class="card-header"> Your Details </h6><!-- .nav -->
+                            <nav class="nav nav-tabs flex-column border-0">
+                                <a href="{% url 'my_profile' %}"
+                                   class="nav-link {% if request.get_full_path == "/profile/settings" %}active{% endif %}">My
+                                    Profile</a>
+                            </nav><!-- /.nav -->
+                        </div><!-- /.card -->
+                    </div><!-- /grid column -->
+                    <!-- grid column -->
+                    <div class="col-lg-8">
+                        <!-- .card -->
+                        <div class="card card-fluid">
+                            <h6 class="card-header"> Public Profile </h6><!-- .card-body -->
+                            <div class="card-body">
+
+                                <!-- form -->
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <!-- form row -->
+                                    <div class="form-row">
+                                        <!-- form column -->
+                                        <div class="col-md-6 mb-3">
+                                            <label for="{{ user_form.first_name.id_for_label }}">{{ user_form.first_name.label }}</label>
+                                            {{ user_form.first_name }}
+                                        </div><!-- /form column -->
+                                        <!-- form column -->
+                                        <div class="col-md-6 mb-3">
+                                            <label for="{{ user_form.last_name.id_for_label }}">{{ user_form.last_name.label }}</label>
+                                            {{ user_form.last_name }}
+                                        </div><!-- /form column -->
+                                    </div><!-- /form row -->
+                                    <!-- .form-group -->
+                                    <div class="form-group">
+                                        <label for="{{ user_form.email.id_for_label }}">{{ user_form.email.label }}</label>
+                                        {{ user_form.email }}
+                                    </div><!-- /.form-group -->
+                                    <!-- .form-group -->
+                                    <div class="form-group">
+                                        <label for="{{ user_form.username.id_for_label }}">{{ user_form.username.label }}</label>
+                                        {{ user_form.username }}
+                                    </div><!-- /.form-group -->
+
+                                    <hr>
+                                    <!-- .form-actions -->
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-primary ml-auto">Update Profile</button>
+                                    </div><!-- /.form-actions -->
+                                </form><!-- /form -->
+                            </div><!-- /.card-body -->
+                        </div><!-- /.card -->
+
+                        <!-- .card -->
+                        <div class="card card-fluid">
+                            <h6 class="card-header"> Change password </h6><!-- .card-body -->
+                            <div class="card-body"><!-- form -->
+                                <form>
+                                    {% csrf_token %}
+                                    <!-- .form-actions -->
+                                    <div class="form-actions">
+                                        <!-- enable submit btn when user type their current password -->
+                                        <input type="password" class="form-control mr-3" id="input06"
+                                               placeholder="Enter New Password" required="">
+                                        <button type="button" class="btn btn-primary text-nowrap ml-auto">
+                                            Change password
+                                        </button>
+                                    </div><!-- /.form-actions -->
+                                </form><!-- /form -->
+                            </div><!-- /.card-body -->
+                        </div><!-- /.card -->
+
+                    </div><!-- /grid column -->
+                </div><!-- /grid row -->
+            </div><!-- /.page-section -->
+        </div><!-- /.page-inner -->
+    </div><!-- /.page -->
+
+{% endblock %}

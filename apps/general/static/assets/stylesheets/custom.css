@@ -1,0 +1,26 @@
+/* put your own styles to customize and override the theme */
+.top-bar-brand, .aside-menu, .auth-header {
+    background-color: #ffffff !important;
+}
+
+.top-bar-brand img {
+    height: 56px !important;
+}
+
+.app-header-dark {
+    background-color: rgba(255, 192, 0, 1);
+    color: #262626;
+}
+
+.app-header-dark .btn-account, .app-header-dark .header-nav .nav-link, .app-header-dark .top-bar-search .input-group-search:not(.focus) .form-control, .app-header-dark .top-bar-search .input-group-search:not(.focus) .form-control::placeholder, .app-header-dark .top-bar-search .input-group-search:not(.focus) .input-group-text {
+    color: #262626;
+}
+
+.auth-header img {
+    height: 100% !important;
+    margin-bottom: 40px;
+}
+
+.auth-body .auth {
+    background-color: #282a2b !important;
+}
